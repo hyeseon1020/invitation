@@ -21,8 +21,12 @@ if ($id) {
 ?>
 <!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><title>초대장 <?= $id?'수정':'등록' ?></title></head>
-<link rel="stylesheet" href="../assets/css/admin.css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>초대장 <?= $id?'수정':'등록' ?></title>
+  <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
 
 <body>
   <div class="container">

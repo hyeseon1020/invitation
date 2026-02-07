@@ -22,5 +22,9 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // 로그인 페이지로 이동
-header("Location: /login.php");
+if($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr'){
+    header("Location: /invitation/index.php");
+}else{
+    header("Location: /index.php");
+}
 exit;
