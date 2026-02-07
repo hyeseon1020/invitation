@@ -56,9 +56,10 @@ a.btn {
 }
 
 /* invite_edit.php */
-.photo-list { display:flex; gap:10px; flex-wrap:wrap; }
-.photo-item { cursor:move; text-align:center; }
-.photo-item img { width:120px; }
+.a-photo-list { display:flex; gap:10px; flex-wrap:wrap; }
+.a-photo-item { cursor:move; text-align:center; }
+.text-right { text-align: end;}
+.a-photo-item img { width:120px; }
 
 /* 공통 */
 label {
