@@ -36,6 +36,13 @@ if ($id) {
         <a href="invite_list.php" class="btn">이전</a>
       </div>
     </div>
+    <div class="text-right">
+      <?php if(isset($data['invite_code']) && $data['invite_code']): ?>
+      <a href="/public/invitation.php?code=<?= $data['invite_code'] ?>" target="_blank">
+        👀 미리보기
+      </a>
+      <?php endif; ?>
+    </div>
 
     <form method="post" action="invite_save.php" class="form-box">
       <input type="hidden" name="invite_id" value="<?= $id ?>">
@@ -44,8 +51,8 @@ if ($id) {
         <label>카테고리</label>
         <select name="invite_category" required>
           <option value="">선택</option>
-          <option value="wedding" <?= $data['invite_category']=='wedding'?'selected':'' ?>>결혼</option>
-          <option value="birthday" <?= $data['invite_category']=='birthday'?'selected':'' ?>>생일</option>
+          <option value="wedding" <?= isset($data['invite_category']) && $data['invite_category']=='wedding'?'selected':'' ?>>결혼</option>
+          <option value="birthday" <?= isset($data['invite_category']) && $data['invite_category']=='birthday'?'selected':'' ?>>생일</option>
         </select>
       </div>
 
@@ -53,9 +60,9 @@ if ($id) {
         <label>테마</label>
         <select name="invite_theme">
           <option value="">선택</option>
-          <option value="theme_basic" <?= $data['invite_theme']=='theme_basic'?'selected':'' ?>>기본</option>
-          <option value="theme_romantic" <?= $data['invite_theme']=='theme_romantic'?'selected':'' ?>>로맨틱</option>
-          <option value="theme_dark" <?= $data['invite_theme']=='theme_dark'?'selected':'' ?>>다크</option>
+          <option value="theme_basic" <?= isset($data['invite_theme']) && $data['invite_theme']=='theme_basic'?'selected':'' ?>>기본</option>
+          <option value="theme_romantic" <?= isset($data['invite_theme']) && $data['invite_theme']=='theme_romantic'?'selected':'' ?>>로맨틱</option>
+          <option value="theme_dark" <?= isset($data['invite_theme']) && $data['invite_theme']=='theme_dark'?'selected':'' ?>>다크</option>
         </select>
       </div>
 
@@ -134,22 +141,37 @@ if ($id) {
     </form>
   
     <!-- 등록된 사진 목록 -->
-    <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="a-photo-list" id="photoList" style="margin-top: 10px;">
       <?php
       $photos = $conn->query("
           SELECT * FROM tb_invite_photo 
           WHERE invite_id={$id}
-          ORDER BY sort_order, photo_id
+          ORDER BY is_main desc, sort_order, photo_id
       ");
   
       while ($p = $photos->fetch_assoc()):
       ?>
-          <div style="text-align:center;">
-              <img src="<?= $p['photo_path'] ?>" style="width:120px;height:auto;display:block;">
+          <div class="a-photo-item" draggable="true" data-id="<?= $p['photo_id'] ?>">
+              <?php
+                if(!$p['is_main']){
+                  echo(
+                    '<a href="invite_photo_main.php?id='. $p["photo_id"] . '&invite_id=' . $id .'" class="btn" style="display:block;">
+              대표로 설정
+              </a>'
+                  );
+                }
+              ?>
+              
+              <div class="text-right">
+                <small><?= $p['is_main'] ? '⭐' : '' ?></small>
+              </div>
+              <br>
+              <img src="<?= $p['photo_path'] ?>" draggable="false">
               <a href="invite_photo_delete.php?id=<?= $p['photo_id'] ?>&invite_id=<?= $id ?>"
-              onclick="return confirm('삭제할까요?')">
+              onclick="return confirm('삭제할까요?')" class="btn" style="display:block;">
               삭제
               </a>
+              
           </div>
       <?php endwhile; ?>
     </div>
@@ -163,22 +185,35 @@ if ($id) {
 
 
   <script>
-    let dragItem = null;
-
-    document.querySelectorAll('.photo-item').forEach(item => {
-      item.addEventListener('dragstart', e => dragItem = item);
-      item.addEventListener('dragover', e => e.preventDefault());
-      item.addEventListener('drop', e => {
-        e.preventDefault();
-        if (dragItem !== item) {
-          item.before(dragItem);
-          saveOrder();
+    document.querySelector('input[type=file]').addEventListener('change', e => {
+      for (let f of e.target.files) {
+        if (f.size > 10 * 1024 * 1024) {
+          alert('사진은 10MB 이하만 업로드 가능합니다.');
+          e.target.value = '';
+          return;
         }
+      }
+    });
+    
+    // photo_drop_sort
+    document.addEventListener('DOMContentLoaded', () => {
+      let dragItem = null;
+
+      document.querySelectorAll('.a-photo-item').forEach(item => {
+        item.addEventListener('dragstart', () => dragItem = item);
+        item.addEventListener('dragover', e => e.preventDefault());
+        item.addEventListener('drop', e => {
+          e.preventDefault();
+          if (dragItem && dragItem !== item) {
+            item.before(dragItem);
+            saveOrder();
+          }
+        });
       });
     });
 
     function saveOrder() {
-      let ids = [...document.querySelectorAll('.photo-item')]
+      let ids = [...document.querySelectorAll('.a-photo-item')]
         .map((el, i) => ({ id: el.dataset.id, order: i }));
 
       fetch('invite_photo_sort.php', {
