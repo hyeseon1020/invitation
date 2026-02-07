@@ -16,40 +16,7 @@ $result = $conn->query($sql);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>초대장 관리</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-}
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
-}
-.top {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-a.btn {
-  padding: 8px 12px;
-  background: #333;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-}
-</style>
+<link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
 
@@ -74,7 +41,7 @@ a.btn {
     <?php while ($row = $result->fetch_assoc()) { ?>
     <tr>
       <td><?= $row['invite_id'] ?></td>
-      <td><?= $row['name1'] ?> & <?= $row['name2'] ?></td>
+      <td><?= $row['name1'] ?> & <?= $row['name4'] ?></td>
       <td><?= $row['party_date'] ?></td>
       <td>
         <a href="../public/invitation.php?code=<?= $row['invite_code'] ?>" target="_blank">

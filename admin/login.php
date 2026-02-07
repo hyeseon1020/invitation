@@ -14,29 +14,7 @@ if (isset($_SESSION['admin_id'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>관리자 로그인</title>
 <link rel="shortcut icon" href="favicon.ico">
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-}
-.login-box {
-  max-width: 360px;
-  margin: 100px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-}
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-}
-button {
-  background: #333;
-  color: #fff;
-  border: none;
-}
-</style>
+<link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>
 

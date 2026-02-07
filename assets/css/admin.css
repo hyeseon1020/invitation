@@ -1,0 +1,171 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+/* login.php */
+.login-box {
+  max-width: 360px;
+  margin: 100px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+}
+input, button {
+  padding: 10px;
+  margin-top: 10px;
+}
+input{
+  width: calc(100% - 25px);
+}
+button {
+  width: 100%;
+  background: #333;
+  color: #fff;
+  border: none;
+}
+
+/* invite_list.php */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+a.btn {
+  padding: 8px 12px;
+  background: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+/* invite_edit.php */
+.photo-list { display:flex; gap:10px; flex-wrap:wrap; }
+.photo-item { cursor:move; text-align:center; }
+.photo-item img { width:120px; }
+
+/* 공통 */
+label {
+  font-size: 13px;
+  margin-bottom: 4px;
+  display: block;
+  color: #555;
+}
+
+select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+textarea {
+  font-family: Arial, sans-serif;
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* form layout */
+.form-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.form-row.full {
+  grid-column: span 2;
+}
+
+/* 버튼 */
+.btn-save {
+  grid-column: span 2;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* 사진 관리 */
+.photo-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.photo-item {
+  width: 120px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.photo-item img {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.photo-item a {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #c00;
+  text-decoration: none;
+}
+
+/* rsvp_list.php */
+.stat-box {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.stat-box b {
+  font-size: 16px;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px){
+  .container {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  .container .form-box {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row.full,
+  .btn-save {
+    grid-column: span 1;
+  }
+
+  .top {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}

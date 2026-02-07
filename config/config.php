@@ -1,5 +1,7 @@
 <?php
+session_start();   // 세션 시작
 include_once("db.php");
+
 // 사이트 기본 설정
 define("SITE_NAME", "모바일 초대장");
 define("BASE_URL", "/invitation");
