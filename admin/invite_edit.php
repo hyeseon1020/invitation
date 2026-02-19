@@ -1,9 +1,6 @@
 <?php
-include_once("../config/config.php");
-
-if (!isset($_SESSION['admin_id'])) {
-  header("Location: login.php"); exit;
-}
+$pageTitle = "초대장";
+include_once("top.php");
 
 $id = $_GET['id'] ?? '';
 $data = [
@@ -19,19 +16,10 @@ if ($id) {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>초대장 <?= $id?'수정':'등록' ?></title>
-  <link rel="stylesheet" href="../assets/css/admin.css">
-</head>
 
-<body>
   <div class="container">
     <div class="top">
-        <h2>초대장 <?= $id?'수정':'등록' ?></h2>
+        <h2> <?=$pageTitle?> <?= $id?'수정':'등록' ?></h2>
       <div>
         <a href="invite_list.php" class="btn">이전</a>
       </div>
@@ -141,7 +129,7 @@ if ($id) {
     </form>
   
     <!-- 등록된 사진 목록 -->
-    <div class="a-photo-list" id="photoList" style="margin-top: 10px;">
+    <div class="photo-list" id="photoList" style="margin-top: 10px;">
       <?php
       $photos = $conn->query("
           SELECT * FROM tb_invite_photo 
@@ -151,7 +139,7 @@ if ($id) {
   
       while ($p = $photos->fetch_assoc()):
       ?>
-          <div class="a-photo-item" draggable="true" data-id="<?= $p['photo_id'] ?>">
+          <div class="photo-item" draggable="true" data-id="<?= $p['photo_id'] ?>">
               <?php
                 if(!$p['is_main']){
                   echo(
@@ -162,13 +150,13 @@ if ($id) {
                 }
               ?>
               
-              <div class="text-right">
+              <div class="text-right" style="<?= $p['is_main'] ? 'padding-bottom: 16px;' : ''?>" >
                 <small><?= $p['is_main'] ? '⭐' : '' ?></small>
               </div>
               <br>
               <img src="<?= $p['photo_path'] ?>" draggable="false">
               <a href="invite_photo_delete.php?id=<?= $p['photo_id'] ?>&invite_id=<?= $id ?>"
-              onclick="return confirm('삭제할까요?')" class="btn" style="display:block;">
+              onclick="return confirm('삭제할까요?')" class="btn a-delete" style="display:block;">
               삭제
               </a>
               
@@ -199,7 +187,7 @@ if ($id) {
     document.addEventListener('DOMContentLoaded', () => {
       let dragItem = null;
 
-      document.querySelectorAll('.a-photo-item').forEach(item => {
+      document.querySelectorAll('.photo-item').forEach(item => {
         item.addEventListener('dragstart', () => dragItem = item);
         item.addEventListener('dragover', e => e.preventDefault());
         item.addEventListener('drop', e => {
@@ -213,7 +201,7 @@ if ($id) {
     });
 
     function saveOrder() {
-      let ids = [...document.querySelectorAll('.a-photo-item')]
+      let ids = [...document.querySelectorAll('.photo-item')]
         .map((el, i) => ({ id: el.dataset.id, order: i }));
 
       fetch('invite_photo_sort.php', {
@@ -223,5 +211,5 @@ if ($id) {
       });
     }
   </script>
-</body>
-</html>
+
+<?php include_once("bottom.php"); ?>

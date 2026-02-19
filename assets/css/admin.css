@@ -1,7 +1,20 @@
 body {
-  font-family: Arial, sans-serif;
   background: #f5f5f5;
 }
+@font-face {
+    font-family: 's-core-dream'; /* 앞으로 CSS에서 사용할 이름 */
+    src: url('s-core-dream.css') format('css');
+    font-weight: normal;
+    font-style: normal;
+}
+
+input[type="date"], 
+input[type="time"],
+.date-display { 
+    font-family: 's-core-dream', sans-serif !important;
+}
+
+.text-right { text-align: end;}
 
 /* login.php */
 .login-box {
@@ -55,12 +68,6 @@ a.btn {
   border-radius: 4px;
 }
 
-/* invite_edit.php */
-.a-photo-list { display:flex; gap:10px; flex-wrap:wrap; }
-.a-photo-item { cursor:move; text-align:center; }
-.text-right { text-align: end;}
-.a-photo-item img { width:120px; }
-
 /* 공통 */
 label {
   font-size: 13px;
@@ -105,7 +112,7 @@ textarea {
 .photo-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 40px 10px; 
 }
 
 .photo-item {
@@ -114,18 +121,21 @@ textarea {
   border: 1px solid #ddd;
   border-radius: 6px;
   padding: 8px;
+  text-align:center;
+  cursor:move; 
 }
 
 .photo-item img {
   width: 100%;
   border-radius: 4px;
 }
-
+.a-delete{
+  color: #c00;
+}
 .photo-item a {
   display: block;
   margin-top: 5px;
   font-size: 12px;
-  color: #c00;
   text-decoration: none;
 }
 
@@ -168,5 +178,9 @@ textarea {
   table {
     display: block;
     overflow-x: auto;
+  }
+
+  .photo-list {
+      justify-content: space-between;
   }
 }

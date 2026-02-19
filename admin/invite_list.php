@@ -1,24 +1,10 @@
 <?php
-include_once("../config/config.php");
-
-// 로그인 체크
-if (!isset($_SESSION['admin_id'])) {
-  header("Location: login.php");
-  exit;
-}
+$pageTitle = "초대장 관리";
+include_once("top.php");
 
 $sql = "SELECT * FROM tb_invitation ORDER BY invite_id DESC";
 $result = $conn->query($sql);
 ?>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>초대장 관리</title>
-<link rel="stylesheet" href="../assets/css/admin.css">
-</head>
-<body>
 
 <div class="container">
   <div class="top">
@@ -57,5 +43,4 @@ $result = $conn->query($sql);
   </table>
 </div>
 
-</body>
-</html>
+<?php include_once("bottom.php"); ?>

@@ -1,6 +1,6 @@
 <?php
-include_once("../config/config.php");
-if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit; }
+$pageTitle = "참석자 관리";
+include_once("top.php");
 
 $id = (int)$_GET['id'];
 
@@ -18,15 +18,6 @@ $stat = $conn->query("
   WHERE invite_id=$id
 ")->fetch_assoc();
 ?>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>참석자 관리</title>
-<link rel="stylesheet" href="../assets/css/admin.css">
-</head>
-<body>
 
 <div class="container">
 
@@ -72,5 +63,4 @@ $stat = $conn->query("
 
 </div>
 
-</body>
-</html>
+<?php include_once("bottom.php"); ?>
