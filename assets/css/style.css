@@ -8,103 +8,201 @@ body {
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-  background: #f2f2f2;
+  background: #f9f7f4; /* 아이보리톤으로 변경 */
   color: #333;
-  line-height: 1.6;
+  line-height: 1.7;
+}
+
+/* ===== 전체 최대폭 ===== */
+.wrapper {
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 /* ===== 카드 레이아웃 ===== */
 .card {
   background: #fff;
-  margin: 16px;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin: 20px 16px;
+  padding: 26px 22px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  text-align: center;
+  transition: 0.3s ease;
 }
 
-/* ===== 갤러리 레이아웃 ===== */
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== 대표 이미지 ===== */
+.main-photo img {
+  width: 100%;
+  display: block;
+  border-radius: 0 0 30px 30px;
+}
+
+/* ===== 갤러리 레이아웃 (2열 그리드) ===== */
 .gallery {
-  display: flex;
+  max-width: 480px;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  overflow-x: auto;
-}
-.gallery-img {
-  width: 160px;
-  border-radius: 10px;
+  padding: 0 16px;
 }
 
+.gallery-img {
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  transition: 0.3s ease;
+}
+
+.gallery-img:hover {
+  transform: scale(1.03);
+}
 
 /* ===== 타이틀 ===== */
 h1 {
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 500;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
 .date {
   text-align: center;
-  font-size: 16px;
-  color: #666;
+  font-size: 15px;
+  color: #777;
+  margin-bottom: 10px;
 }
 
 /* ===== 섹션 타이틀 ===== */
 .card h3 {
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   font-size: 18px;
+  font-weight: 600;
 }
 
 /* ===== 텍스트 ===== */
 .card p {
   margin: 6px 0;
   word-break: keep-all;
+  font-size: 14px;
 }
 
 /* ===== RSVP 폼 ===== */
 form input,
-form select,
-form button {
+form select {
   width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
   font-size: 14px;
+  background: #fafafa;
 }
 
 form input:focus,
 form select:focus {
   outline: none;
-  border-color: #999;
+  border-color: #c9a87c;
+  background: #fff;
 }
 
 form button {
-  background: #222;
+  width: 100%;
+  padding: 16px;
+  background: #333;
   color: #fff;
   border: none;
-  margin-top: 14px;
-  font-size: 16px;
+  border-radius: 14px;
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.3s ease;
 }
 
-/* ===== 하단 고정 버튼 (확장용) ===== */
-.fixed-btn {
-  position: fixed;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
+form button:hover {
   background: #000;
+}
+
+/* ===== 하단 고정 버튼 ===== */
+.fixed-btn {
+  z-index: 1;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #d8b08c;
   color: #fff;
-  text-align: center;
-  padding: 14px;
-  border-radius: 14px;
-  font-size: 16px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
   text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ===== QR 영역 여백 ===== */
+img[src*="qrserver"] {
+  display: block;
+  margin: 30px auto;
 }
 
 /* ===== PC 대응 ===== */
 @media (min-width: 768px) {
-  .card {
-    max-width: 600px;
-    margin: 20px auto;
+  body {
+    background: #ececec;
   }
+
+  .card {
+    max-width: 480px;
+    margin: 30px auto;
+  }
+}
+.hero img {
+  width: 100%;
+  display: block;
+  border-radius: 0 0 40px 40px;
+}
+
+.intro {
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+
+.intro h1 {
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.info-box {
+  text-align: center;
+  padding: 20px;
+}
+
+.gallery-wrap {
+  margin: 40px 0;
+}
+
+.swiper {
+  padding-bottom: 20px !important;
+}
+
+.swiper-slide img {
+  width: 85%;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.message {
+  background: #fffaf4;
+}
+
+.rsvp h3 {
+  margin-bottom: 20px;
 }

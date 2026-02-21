@@ -21,10 +21,7 @@ if (!$invite) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>모바일 청첩장</title>
 <link rel="stylesheet" href="../assets/css/style.css">
-<link rel="stylesheet" href="../assets/css/<?= $invite['invite_theme'] ?>.css">
 <script src="../assets/js/common.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 </head>
 <style>
@@ -35,7 +32,8 @@ if (!$invite) {
 <body>
 
   <div class="card">
-    <h1><?= $invite['name1'] ?> ❤ <?= $invite['name4'] ?></h1>
+    <h1><?= $invite['title'] ?></h1>
+    <h2><?= $invite['name1'] ?> ❤ <?= $invite['name4'] ?></h2>
     <p class="date">
       <?= $invite['party_date'] ?>
       <?= substr($invite['party_time'],0,5) ?>
@@ -67,6 +65,32 @@ if (!$invite) {
     <p><?= nl2br($invite['contents']) ?></p>
   </div>
 
+  <?php
+  // 대표이미지
+  $main = $conn->query("
+    SELECT photo_path FROM tb_invite_photo
+    WHERE invite_id={$invite['invite_id']} AND is_main=1
+  ")->fetch_assoc();
+  ?>
+  <?php if($main): ?>
+  <!-- 대표 이미지 -->
+  <div>
+    대표이미지
+    <img src="<?= $main['photo_path'] ?>" class="gallery-img">
+  </div>
+  <?php endif; ?>
+  <!-- 갤러리 -->
+  <div class="gallery">
+    <?php
+    //사진
+    $photos = $conn->query("SELECT * FROM tb_invite_photo WHERE invite_id={$invite['invite_id']} ORDER BY  is_main desc, sort_order, photo_id");
+    while ($p = $photos->fetch_assoc()) {
+    ?>
+        <img src="<?= $p['photo_path'] ?>" class="gallery-img">
+    <?php } ?>
+  </div>
+
+  <!-- RSVP -->
   <div class="card">
     <h3>참석 여부</h3>
     <form method="post" action="rsvp_save.php" onsubmit="return validateRsvpForm(this)">
@@ -84,79 +108,9 @@ if (!$invite) {
     </form>
   </div>
 
-  <?php
-  // 대표이미지
-  $main = $conn->query("
-    SELECT photo_path FROM tb_invite_photo
-    WHERE invite_id={$invite['invite_id']} AND is_main=1
-  ")->fetch_assoc();
-  ?>
-  <div>
-    대표이미지
-    <img src="<?= $main['photo_path'] ?>" class="gallery-img">
-  </div>
-  <div class="gallery">
-    <?php
-    //사진
-    $photos = $conn->query("SELECT * FROM tb_invite_photo WHERE invite_id={$invite['invite_id']} ORDER BY  is_main desc, sort_order, photo_id");
-    while ($p = $photos->fetch_assoc()) {
-    ?>
-        <img src="<?= $p['photo_path'] ?>" class="gallery-img">
-    <?php } ?>
-  </div>
-<!-- 스와이프 갤러리 -->
-  <div class="swiper">
-    <div class="swiper-wrapper">
-  <?php
-  $photos = $conn->query("
-    SELECT photo_path FROM tb_invite_photo
-    WHERE invite_id={$invite['invite_id']}
-    ORDER BY is_main desc, sort_order, photo_id
-  ");
-  while ($p = $photos->fetch_assoc()):
-  ?>
-      <div class="swiper-slide">
-        <img src="<?= $p['photo_path'] ?>" width="300" height="auto">
-      </div>
-  <?php endwhile; ?>
-    </div>
-  </div>
-<!-- //스와이프 갤러리 -->
-
-
+  <!-- 지도 버튼 -->
   <a class="fixed-btn"
     href="https://map.kakao.com/link/search/<?= urlencode($invite['hall_name']) ?>"
     target="_blank">📍 지도 보기</a>
-
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=
-    <?php 
-      if($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr'){
-        echo urlencode('hyesun1020.dothome.co.kr/invitation/public/invitation.php?code=' . $invite['invite_code']);
-      }else{
-        echo urlencode('localhost:8000/public/invitation.php?code=' . $invite['invite_code']); 
-      }
-    ?>
-  ">
-
-<script>
-  new Swiper('.swiper', {    
-    // 한 화면에 보여줄 슬라이드 개수
-    // 'auto'로 설정하면 CSS에서 정한 너비만큼 보이고 나머지는 옆에 걸쳐집니다.
-    slidesPerView: 1.5, 
-
-    // 슬라이드 사이의 간격 (px)
-    spaceBetween: 50,
-
-    // 활성화된 슬라이드를 가운데 배치 (옆 이미지들이 양옆으로 보임)
-    centeredSlides: true,
-
-    // 네비게이션/페이지네이션이 있다면 추가
-    pagination: {
-    el: '.swiper-pagination',
-    clickable: true,
-    },
-  });
-</script>
-
 </body>
 </html>
