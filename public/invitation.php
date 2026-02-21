@@ -75,7 +75,6 @@ if (!$invite) {
   <?php if($main): ?>
   <!-- 대표 이미지 -->
   <div>
-    대표이미지
     <img src="<?= $main['photo_path'] ?>" class="gallery-img">
   </div>
   <?php endif; ?>

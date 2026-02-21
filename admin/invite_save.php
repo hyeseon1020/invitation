@@ -32,4 +32,5 @@ if ($id) {
 }
 
 $stmt->execute();
-header("Location: invite_list.php");
+// header("Location: invite_list.php");
+header("Location: invite_edit.php?id=".$id);
