@@ -2,7 +2,7 @@
 $pageTitle = "초대장 관리";
 include_once("top.php");
 
-$sql = "SELECT * FROM tb_invitation ORDER BY invite_id DESC";
+$sql = "SELECT * FROM tb_invitation i LEFT JOIN tb_code c ON c.code_id = i.invite_theme ORDER BY invite_id DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -30,7 +30,7 @@ $result = $conn->query($sql);
       <td><?= $row['name1'] ?> & <?= $row['name4'] ?></td>
       <td><?= $row['party_date'] ?></td>
       <td>
-        <a href="../public/invitation.php?code=<?= $row['invite_code'] ?>" target="_blank">
+        <a href="../public/<?= $row['add1'] ?>.php?code=<?= $row['invite_code'] ?>" target="_blank">
           보기
         </a>
       </td>

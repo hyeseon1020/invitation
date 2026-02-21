@@ -10,11 +10,11 @@ body {
 
 input[type="date"], 
 input[type="time"],
-.date-display { 
-    font-family: 's-core-dream', sans-serif !important;
-}
-
-.text-right { text-align: end;}
+.date-display { font-family: 's-core-dream', sans-serif !important;}
+.text-right { text-align: end; }
+.flex{ display: flex; }
+.space-between{ justify-content: space-between; }
+    
 
 /* login.php */
 .login-box {

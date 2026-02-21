@@ -1,7 +1,7 @@
 // 페이지 로드 확인
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("common.js loaded");
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   console.log("common.js loaded");
+// });
 
 // 참석 여부 선택 시 인원 입력 제어
 function toggleGuestCount(selectEl) {

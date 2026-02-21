@@ -1,20 +1,19 @@
 <?php
-$pageTitle = "초대장";
-include_once("top.php");
+  $pageTitle = "초대장";
+  include_once("top.php");
 
-$id = $_GET['id'] ?? '';
-$data = [
-  'invite_category'=>'','category_no'=>'','name1'=>'','name2'=>'','name3'=>'','name4'=>'','name5'=>'','name6'=>'','party_date'=>'',
-  'party_time'=>'','hall_name'=>'','hall_address'=>'','title'=>'','contents'=>''
-];
+  $id = $_GET['id'] ?? '';
+  $data = [
+    'invite_category'=>'','category_no'=>'','name1'=>'','name2'=>'','name3'=>'','name4'=>'','name5'=>'','name6'=>'','party_date'=>'',
+    'party_time'=>'','hall_name'=>'','hall_address'=>'','title'=>'','contents'=>''
+  ];
 
-if ($id) {
-  $stmt = $conn->prepare("SELECT * FROM tb_invitation WHERE invite_id=?");
-  $stmt->bind_param("i",$id);
-  $stmt->execute();
-  $data = $stmt->get_result()->fetch_assoc();
-}
-
+  if ($id) {
+    $stmt = $conn->prepare("SELECT * FROM tb_invitation i LEFT JOIN tb_code c ON c.code_id = i.invite_theme WHERE invite_id=?");
+    $stmt->bind_param("i",$id);
+    $stmt->execute();
+    $data = $stmt->get_result()->fetch_assoc();
+  }
 ?>
 
   <div class="container">
@@ -24,9 +23,10 @@ if ($id) {
         <a href="invite_list.php" class="btn">이전</a>
       </div>
     </div>
+    <p class="a-delete">※ 생일 카테고리 기능은 아직 오픈하지 않았습니다. 선택 시 오류 발생</p>
     <div class="text-right">
       <?php if(isset($data['invite_code']) && $data['invite_code']): ?>
-      <a href="<?=($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr')? '/invitation' : '' ?>/public/invitation.php?code=<?= $data['invite_code'] ?>" target="_blank">
+      <a href="/<?=($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr')? 'invitation/public/'. $data['add1']  : 'public/' . $data['add1']  ?>.php?code=<?= $data['invite_code'] ?>" target="_blank">
         👀 미리보기
       </a>
       <?php endif; ?>
@@ -162,6 +162,20 @@ if ($id) {
     </form>
 
     <?php if ($id): ?>
+    <hr>
+    <div class="flex space-between">
+      <p>초대장 QR:</p>
+      <!-- QR -->
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=
+        <?php 
+          if($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr'){
+            echo urlencode('hyesun1020.dothome.co.kr/invitation/public/'. $invite_html . '.php?code=' . $data['invite_code']);
+          }else{
+            echo urlencode('localhost:8000/public/'. $invite_html . '.php?code=' . $data['invite_code']); 
+          }
+        ?>
+      ">
+    </div>
     <hr>
     <h3>📸 초대장 사진 관리</h3>
   
