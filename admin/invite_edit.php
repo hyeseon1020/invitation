@@ -169,9 +169,9 @@
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=
         <?php 
           if($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr'){
-            echo urlencode('hyesun1020.dothome.co.kr/invitation/public/'. $invite_html . '.php?code=' . $data['invite_code']);
+            echo urlencode('hyesun1020.dothome.co.kr/invitation/public/'. $data['add1'] . '.php?code=' . $data['invite_code']);
           }else{
-            echo urlencode('localhost:8000/public/'. $invite_html . '.php?code=' . $data['invite_code']); 
+            echo urlencode('localhost:8000/public/'. $data['add1'] . '.php?code=' . $data['invite_code']); 
           }
         ?>
       ">
