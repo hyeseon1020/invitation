@@ -26,7 +26,7 @@ if ($id) {
     </div>
     <div class="text-right">
       <?php if(isset($data['invite_code']) && $data['invite_code']): ?>
-      <a href="/public/invitation.php?code=<?= $data['invite_code'] ?>" target="_blank">
+      <a href="<?=($_SERVER['HTTP_HOST'] == 'hyesun1020.dothome.co.kr')? '/invitation' : '' ?>/public/invitation.php?code=<?= $data['invite_code'] ?>" target="_blank">
         👀 미리보기
       </a>
       <?php endif; ?>
@@ -34,23 +34,67 @@ if ($id) {
 
     <form method="post" action="invite_save.php" class="form-box">
       <input type="hidden" name="invite_id" value="<?= $id ?>">
+      <?php
+      // 카테고리 조회
+      $sql = "SELECT code_id, code_name 
+              FROM tb_code 
+              WHERE depth = 0 
+              AND is_active = 'Y'
+              ORDER BY order_no ASC";
 
+      $result = $conn->query($sql);
+      $category_list = [];
+
+      while($row = $result->fetch_assoc()){
+          $category_list[] = $row;
+      }
+      ?>
       <div class="form-row">
         <label>카테고리</label>
-        <select name="invite_category" required>
+        <select name="invite_category" id="invite_category" required>
           <option value="">선택</option>
-          <option value="wedding" <?= isset($data['invite_category']) && $data['invite_category']=='wedding'?'selected':'' ?>>결혼</option>
-          <option value="birthday" <?= isset($data['invite_category']) && $data['invite_category']=='birthday'?'selected':'' ?>>생일</option>
+          <?php foreach($category_list as $cat): ?>
+            <option value="<?= $cat['code_id'] ?>"
+              <?= isset($data['invite_category']) && $data['invite_category']==$cat['code_id'] ? 'selected' : '' ?>>
+              <?= $cat['code_name'] ?>
+            </option>
+          <?php endforeach; ?>
         </select>
       </div>
 
+      <?php
+      // 테마 조회
+      $selected_category = $data['invite_category'] ?? '';
+
+      $theme_list = [];
+
+      if($selected_category){
+          $stmt = $conn->prepare("
+              SELECT code_id, code_name 
+              FROM tb_code 
+              WHERE parent_code = ? 
+              AND is_active = 'Y'
+              ORDER BY order_no ASC
+          ");
+          $stmt->bind_param("s", $selected_category);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          while($row = $result->fetch_assoc()){
+              $theme_list[] = $row;
+          }
+      }
+      ?>
       <div class="form-row">
         <label>테마</label>
-        <select name="invite_theme">
+        <select name="invite_theme" id="invite_theme">
           <option value="">선택</option>
-          <option value="theme_basic" <?= isset($data['invite_theme']) && $data['invite_theme']=='theme_basic'?'selected':'' ?>>기본</option>
-          <option value="theme_romantic" <?= isset($data['invite_theme']) && $data['invite_theme']=='theme_romantic'?'selected':'' ?>>로맨틱</option>
-          <option value="theme_dark" <?= isset($data['invite_theme']) && $data['invite_theme']=='theme_dark'?'selected':'' ?>>다크</option>
+          <?php foreach($theme_list as $theme): ?>
+            <option value="<?= $theme['code_id'] ?>"
+              <?= isset($data['invite_theme']) && $data['invite_theme']==$theme['code_id'] ? 'selected' : '' ?>>
+              <?= $theme['code_name'] ?>
+            </option>
+          <?php endforeach; ?>
         </select>
       </div>
 
@@ -173,43 +217,58 @@ if ($id) {
 
 
   <script>
-    document.querySelector('input[type=file]').addEventListener('change', e => {
-      for (let f of e.target.files) {
-        if (f.size > 10 * 1024 * 1024) {
-          alert('사진은 10MB 이하만 업로드 가능합니다.');
-          e.target.value = '';
-          return;
-        }
+  // file_size
+  document.querySelector('input[type=file]').addEventListener('change', e => {
+    for (let f of e.target.files) {
+      if (f.size > 10 * 1024 * 1024) {
+        alert('사진은 10MB 이하만 업로드 가능합니다.');
+        e.target.value = '';
+        return;
       }
-    });
-    
-    // photo_drop_sort
-    document.addEventListener('DOMContentLoaded', () => {
-      let dragItem = null;
-
-      document.querySelectorAll('.photo-item').forEach(item => {
-        item.addEventListener('dragstart', () => dragItem = item);
-        item.addEventListener('dragover', e => e.preventDefault());
-        item.addEventListener('drop', e => {
-          e.preventDefault();
-          if (dragItem && dragItem !== item) {
-            item.before(dragItem);
-            saveOrder();
-          }
-        });
-      });
-    });
-
-    function saveOrder() {
-      let ids = [...document.querySelectorAll('.photo-item')]
-        .map((el, i) => ({ id: el.dataset.id, order: i }));
-
-      fetch('invite_photo_sort.php', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(ids)
-      });
     }
+  });
+  
+  // photo_drop_sort
+  document.addEventListener('DOMContentLoaded', () => {
+    let dragItem = null;
+
+    document.querySelectorAll('.photo-item').forEach(item => {
+      item.addEventListener('dragstart', () => dragItem = item);
+      item.addEventListener('dragover', e => e.preventDefault());
+      item.addEventListener('drop', e => {
+        e.preventDefault();
+        if (dragItem && dragItem !== item) {
+          item.before(dragItem);
+          saveOrder();
+        }
+      });
+    });
+  });
+
+  function saveOrder() {
+    let ids = [...document.querySelectorAll('.photo-item')]
+      .map((el, i) => ({ id: el.dataset.id, order: i }));
+
+    fetch('invite_photo_sort.php', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(ids)
+    });
+  }
+  </script>
+
+  <script>
+  // theme_list
+  document.getElementById('invite_category').addEventListener('change', function(){
+      const category = this.value;
+
+      fetch('../ajax/get_theme.php?parent_code=' + category)
+      .then(res => res.text())
+      .then(data => {
+          document.getElementById('invite_theme').innerHTML =
+              '<option value="">선택</option>' + data;
+      });
+  });
   </script>
 
 <?php include_once("bottom.php"); ?>

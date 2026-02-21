@@ -130,7 +130,7 @@ textarea {
   border-radius: 4px;
 }
 .a-delete{
-  color: #c00;
+  color: #c00!important;
 }
 .photo-item a {
   display: block;

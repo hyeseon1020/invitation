@@ -16,3 +16,8 @@ error_reporting(E_ALL); // 개발 시
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
+
+@ini_set('memory_limit', '128M');
+@ini_set('post_max_size', '50M');
+@ini_set('upload_max_filesize', '20M');
+?>
